@@ -1,0 +1,5 @@
+"table_name","column_name","references_table","references_column"
+"box","user_id","users","user_id"
+"box_item","box_id","box","box_id"
+"box_item","item_id","item","item_id"
+"oauth_account","user_id","users","user_id"

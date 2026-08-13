@@ -1,0 +1,7 @@
+"table_name","column_name","ordinal_position"
+"box","box_id",1
+"box_item","box_id",1
+"box_item","item_id",2
+"item","item_id",1
+"oauth_account","oauth_account_id",1
+"users","user_id",1

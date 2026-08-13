@@ -1,0 +1,36 @@
+"table_name","ordinal_position","column_name","data_type","is_nullable","column_default"
+"box",1,"box_id","bigint","NO",NULL
+"box",2,"user_id","bigint","NO",NULL
+"box",3,"box_name","text","NO",NULL
+"box",4,"image_url","text","NO",NULL
+"box",5,"created_at","timestamp with time zone","NO","now()"
+"box",6,"updated_at","timestamp with time zone","NO","now()"
+"box_item",1,"box_id","bigint","NO",NULL
+"box_item",2,"item_id","bigint","NO",NULL
+"box_item",3,"quantity","integer","NO","1"
+"box_item",4,"created_at","timestamp with time zone","NO","now()"
+"box_item",5,"updated_at","timestamp with time zone","NO","now()"
+"item",1,"item_id","bigint","NO",NULL
+"item",2,"item_name","text","NO",NULL
+"item",3,"created_at","timestamp with time zone","NO","now()"
+"oauth_account",1,"oauth_account_id","bigint","NO",NULL
+"oauth_account",2,"user_id","bigint","NO",NULL
+"oauth_account",3,"provider","text","NO",NULL
+"oauth_account",4,"provider_user_id","text","NO",NULL
+"oauth_account",5,"provider_login","USER-DEFINED","YES",NULL
+"oauth_account",6,"provider_email","USER-DEFINED","YES",NULL
+"oauth_account",7,"access_token","text","NO",NULL
+"oauth_account",8,"refresh_token","text","YES",NULL
+"oauth_account",9,"token_type","text","NO","'bearer'::text"
+"oauth_account",10,"scope","text","YES",NULL
+"oauth_account",11,"expires_at","timestamp with time zone","YES",NULL
+"oauth_account",12,"revoked_at","timestamp with time zone","YES",NULL
+"oauth_account",13,"last_used_at","timestamp with time zone","YES",NULL
+"oauth_account",14,"created_at","timestamp with time zone","NO","now()"
+"oauth_account",15,"updated_at","timestamp with time zone","NO","now()"
+"users",1,"user_id","bigint","NO",NULL
+"users",2,"username","USER-DEFINED","NO",NULL
+"users",3,"display_name","text","YES",NULL
+"users",4,"is_active","boolean","NO","true"
+"users",5,"created_at","timestamp with time zone","NO","now()"
+"users",6,"updated_at","timestamp with time zone","NO","now()"
