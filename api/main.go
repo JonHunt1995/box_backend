@@ -75,11 +75,7 @@ func main() {
 		},
 	}
 
-	e.GET("/", func(c *echo.Context) error {
-		return c.JSON(http.StatusOK, map[string]string{"message": "Hello, World!"})
-	})
-	e.GET("/api/v1/:user_id", app.getUserBoxes)
-	e.POST("/api/v1/:user_id", app.registerNewBoxes)
+	app.RegisterRoutes(e)
 
 	if err := e.Start(":1323"); err != nil {
 		e.Logger.Error("failed to start server", "error", err)
