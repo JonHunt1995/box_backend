@@ -7,6 +7,8 @@ import (
 
 	"github.com/labstack/echo/v5"
 	"github.com/labstack/echo/v5/middleware"
+	"golang.org/x/oauth2"
+	"golang.org/x/oauth2/github"
 )
 
 type Box struct {
@@ -20,9 +22,8 @@ type Cache struct {
 }
 
 type app struct {
-	DB                 *Cache
-	GithubClientID     string
-	GithubClientSecret string
+	DB          *Cache
+	OAuthConfig *oauth2.Config
 }
 
 type User struct {
@@ -76,8 +77,13 @@ func main() {
 			mu:   sync.RWMutex{},
 			data: make(map[string][]Box),
 		},
-		GithubClientID:     os.Getenv("GITHUB_CLIENT_ID"),
-		GithubClientSecret: os.Getenv("GITHUB_CLIENT_SECRET"),
+	}
+	app.OAuthConfig = &oauth2.Config{
+		ClientID:     os.Getenv("GITHUB_CLIENT_ID"),
+		ClientSecret: os.Getenv("GITHUB_CLIENT_SECRET"),
+		Endpoint:     github.Endpoint,
+		RedirectURL:  "http://localhost:1323/api/v1/auth/github/callback",
+		Scopes:       []string{"read:user", "user:email"},
 	}
 	e.GET("/", func(c *echo.Context) error {
 		return c.JSON(http.StatusOK, map[string]string{"message": "Hello, World!"})
