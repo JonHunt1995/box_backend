@@ -9,4 +9,4 @@ FROM alpine:latest
 WORKDIR /root/
 COPY --from=builder /app/api .
 EXPOSE 1323
-CMD ["./api-server"]
+CMD ["./api"]

@@ -1,5 +1,5 @@
 -- +goose Up
-CREATE SCHEMA IF NOT EXISTS boombox AUTHORIZATION postgres;
+CREATE SCHEMA IF NOT EXISTS boombox;
 SET search_path TO boombox, public;
 
 CREATE EXTENSION IF NOT EXISTS citext;

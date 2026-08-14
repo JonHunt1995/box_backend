@@ -74,6 +74,7 @@ func main() {
 			data: make(map[string][]Box),
 		},
 	}
+
 	e.GET("/", func(c *echo.Context) error {
 		return c.JSON(http.StatusOK, map[string]string{"message": "Hello, World!"})
 	})
