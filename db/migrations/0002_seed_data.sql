@@ -1,4 +1,4 @@
-BEGIN;
+-- +goose Up
 SET search_path TO boombox, public;
 
 -- ------------------------------------------
@@ -214,4 +214,6 @@ FROM boombox.box b, boombox.item i
 WHERE b.image_url='https://img.boombox.dev/qr/eve-box-01.png' AND i.item_name='Ethernet Cable'
 ON CONFLICT (box_id, item_id) DO UPDATE SET quantity = EXCLUDED.quantity;
 
-COMMIT;
+-- +goose Down
+DELETE FROM boombox.users WHERE username IN ('alice', 'bob', 'carol', 'dave', 'eve');
+DELETE FROM boombox.item WHERE item_name IN ('HDMI Cable', 'USB-C Cable', 'Ethernet Cable', 'Power Adapter', 'Wireless Mouse', 'Keyboard', 'Notebook', 'Marker Pack', 'AA Batteries', 'Phone Charger');

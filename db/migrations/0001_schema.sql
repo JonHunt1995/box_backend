@@ -1,6 +1,5 @@
-BEGIN;
-
-CREATE SCHEMA IF NOT EXISTS boombox AUTHORIZATION postgres;
+-- +goose Up
+CREATE SCHEMA IF NOT EXISTS boombox;
 SET search_path TO boombox, public;
 
 CREATE EXTENSION IF NOT EXISTS citext;
@@ -75,4 +74,5 @@ CREATE TABLE IF NOT EXISTS boombox.box_item (
 CREATE INDEX IF NOT EXISTS idx_box_item_item_id
     ON boombox.box_item(item_id);
 
-COMMIT;
+-- +goose Down
+DROP SCHEMA IF EXISTS boombox CASCADE;
