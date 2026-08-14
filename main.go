@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"os"
 	"sync"
 
 	"github.com/labstack/echo/v5"
@@ -19,7 +20,9 @@ type Cache struct {
 }
 
 type app struct {
-	DB *Cache
+	DB                 *Cache
+	GithubClientID     string
+	GithubClientSecret string
 }
 
 type User struct {
@@ -73,6 +76,8 @@ func main() {
 			mu:   sync.RWMutex{},
 			data: make(map[string][]Box),
 		},
+		GithubClientID:     os.Getenv("GITHUB_CLIENT_ID"),
+		GithubClientSecret: os.Getenv("GITHUB_CLIENT_SECRET"),
 	}
 	e.GET("/", func(c *echo.Context) error {
 		return c.JSON(http.StatusOK, map[string]string{"message": "Hello, World!"})
