@@ -1,26 +1,13 @@
 package main
 
 import (
-	"sync"
-
-	"inventorybox.com/db"
+	"inventorybox.com/api/box"
+	"inventorybox.com/api/boxItem"
+	"inventorybox.com/api/user"
 )
 
 type app struct {
-	DB db.Querier
-}
-
-type Box struct {
-	Name     string   `json:"name"`
-	Contents []string `json:"contents"`
-}
-
-type Cache struct {
-	mu   sync.RWMutex
-	data map[string][]Box
-}
-
-type User struct {
-	Name  string `json:"name"`
-	Rooms []Box  `json:"boxes"`
+	Users    *user.Service
+	Boxes    *box.Service
+	BoxItems *boxItem.Service
 }

@@ -1,4 +1,4 @@
-package boxitem
+package boxItem
 
 import (
 	"context"
@@ -11,7 +11,11 @@ type Service struct {
 }
 
 type Request struct {
-	
+	ItemID    string `json:"itemID"`
+	UpdatedAt string `json:"updatedAt"`
+	ItemName  string `json:"itemName"`
+	Quantity  int    `json:"quantity"`
+	ImageURL  string `json:"imageURL"`
 }
 
 func New(repo db.Storer) *Service {

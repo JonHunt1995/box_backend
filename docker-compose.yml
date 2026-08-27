@@ -30,10 +30,14 @@ services:
   api:
     build:
       context: .
+      dockerfile: Dockerfile.dev
     ports:
       - "1323:1323"
-    environment:
-      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?sslmode=disable
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+
     depends_on:
       postgres:
         condition: service_healthy

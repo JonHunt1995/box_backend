@@ -2,41 +2,55 @@ package main
 
 import (
 	"net/http"
+	"strconv"
+	"time"
 
 	"github.com/labstack/echo/v5"
 )
 
+type BoxItem struct {
+	ID        string    `json:"id"`
+	UpdatedAt time.Time `json:"updatedAt"`
+	Quantity  int       `json:"quantity"`
+}
+
+type Box struct {
+	ID string `json:"id"`
+}
+
+type User struct {
+	Boxes []Box `json:"boxes"`
+}
+
 func (a *app) getUserBoxes(c *echo.Context) error {
-	userID := c.Param("user_id")
-	a.DB.mu.Lock()
-	defer a.DB.mu.Unlock()
+	userID, err := echo.PathParam[int](c, "user_id")
+	if err != nil {
+		return err
+	}
 
-	boxes, found := a.DB.data[userID]
-
-	if !found {
+	ctx := c.Request().Context()
+	dbBoxes, err := a.Users.ReadBoxes(ctx, userID)
+	if err != nil {
 		return c.String(http.StatusBadRequest, "bad request")
 	}
-	
-	user := user.Response{Name: userID, Rooms: boxes}
+
+	boxes := make([]Box, len(dbBoxes))
+	for i, dbBox := range dbBoxes {
+		boxes[i] = Box{ID: strconv.Itoa(int(dbBox.BoxID))}
+	}
+	user := User{
+		Boxes: boxes,
+	}
 	return c.JSON(http.StatusOK, user)
 }
 
 func (a *app) registerNewBoxes(c *echo.Context) error {
-	userID := c.Param("user_id")
-	var box Box
-	if err := c.Bind(&box); err != nil {
-		return c.String(http.StatusBadRequest, err.Error())
+	userID, err := echo.PathParam[int](c, "user_id")
+	if err != nil {
+		return err
 	}
 
-	a.DB.mu.Lock()
-	defer a.DB.mu.Unlock()
-	boxes, ok := a.DB.data[userID]
-	c.Logger().Debug("did it make it here? kinda doubtful")
-	if !ok {
-		a.DB.data[userID] = []Box{box}
-		return c.NoContent(http.StatusCreated)
-	}
-
-	a.DB.data[userID] = append(boxes, box)
+	ctx := c.Request().Context()
+	a.Boxes.Create(ctx, userID, "")
 	return c.NoContent(http.StatusCreated)
 }
