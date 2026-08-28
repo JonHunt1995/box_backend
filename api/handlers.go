@@ -31,7 +31,7 @@ func (a *app) getUserBoxes(c *echo.Context) error {
 	ctx := c.Request().Context()
 	dbBoxes, err := a.Users.ReadBoxes(ctx, userID)
 	if err != nil {
-		return c.String(http.StatusBadRequest, "bad request")
+		return c.String(http.StatusBadRequest, err.Error())
 	}
 
 	boxes := make([]Box, len(dbBoxes))

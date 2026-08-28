@@ -21,11 +21,14 @@ clean:
 reset: clean dev
 
 migrate-up:
-	# Make automatically grabs $(GOOSE_MIGRATION_DIR) from the .env file!
-	goose -dir $(GOOSE_MIGRATION_DIR) $(GOOSE_DRIVER) "${GOOSE_DBSTRING}" up
+	GOOSE_DBSTRING="postgres://user:user@localhost:5432/mydb?sslmode=disable" goose -dir ./db/migrations up
 
 migrate-down:
-	goose -dir $(GOOSE_MIGRATION_DIR) $(GOOSE_DRIVER) "${GOOSE_DBSTRING}" down
+	GOOSE_DBSTRING="postgres://user:user@localhost:5432/mydb?sslmode=disable" goose -dir ./db/migrations down
+
+migrate-reset:
+	# This wipes everything!
+	GOOSE_DBSTRING="postgres://user:user@localhost:5432/mydb?sslmode=disable" goose -dir ./db/migrations reset
 
 psql:
 	docker compose exec postgres psql -U $(POSTGRES_USER) -d $(POSTGRES_DB)
