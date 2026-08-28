@@ -12,4 +12,6 @@ func (app *app) RegisterRoutes(e *echo.Echo, ) {
 	})
 	e.GET("/api/v1/:user_id", app.getUserBoxes)
 	e.POST("/api/v1/:user_id", app.registerNewBoxes)
+	e.GET("/api/v1/auth/github/login", app.loginHandler)
+	e.GET("/api/v1/auth/github/callback", app.callbackHandler)
 }
