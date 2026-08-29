@@ -4,9 +4,12 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v5"
+	echoSwagger "github.com/swaggo/echo-swagger/v2"
+	_ "inventorybox.com/docs"
 )
 
 func (app *app) RegisterRoutes(e *echo.Echo) {
+	e.GET("/swagger/*", echoSwagger.WrapHandler)
 	e.GET("/", func(c *echo.Context) error {
 		return c.JSON(http.StatusOK, map[string]string{"message": "Hello, World!"})
 	})

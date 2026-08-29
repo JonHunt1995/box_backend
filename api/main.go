@@ -17,6 +17,12 @@ import (
 	"inventorybox.com/db"
 )
 
+// @title			Boom Box API
+// @version		1.0
+// @description	API for a web app that allows people to manage and easily find/search
+// @description	contents for their boxes without having to manually open boxes.
+// @host			localhost:1323
+// @BasePath		/api/v1
 func main() {
 	e := echo.New()
 

@@ -1,0 +1,54 @@
+basePath: /api/v1
+definitions:
+  main.Box:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    type: object
+  main.User:
+    properties:
+      boxes:
+        items:
+          $ref: '#/definitions/main.Box'
+        type: array
+    type: object
+host: localhost:1323
+info:
+  contact: {}
+  description: |-
+    API for a web app that allows people to manage and easily find/search
+    contents for their boxes without having to manually open boxes.
+  title: Boom Box API
+  version: "1.0"
+paths:
+  /{user_id}/boxes:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Unique user id
+        in: path
+        name: user_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.User'
+        "400":
+          description: 'Bad Request: (error description)'
+          schema:
+            type: string
+        "404":
+          description: User Not Found
+          schema:
+            type: string
+      summary: Get all boxes from a user based off of the user id
+      tags:
+      - Boxes
+swagger: "2.0"

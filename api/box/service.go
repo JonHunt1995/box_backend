@@ -14,7 +14,8 @@ type Service struct {
 type Request struct {
 	name string
 }
-// 
+
+//
 // Box
 // {
 //   boxId: string; // <- query param
@@ -22,9 +23,10 @@ type Request struct {
 // }
 
 // User
-// {
-//   boxIds: Box[];
-// }
+//
+//	{
+//	  boxIds: Box[];
+//	}
 type Response struct {
 	boxID string
 }
@@ -38,8 +40,8 @@ func (s *Service) Create(ctx context.Context, userID int, name string) (db.Boomb
 		return db.BoomboxBox{}, errors.New("item requires name")
 	}
 	return s.repo.CreateBox(ctx, db.CreateBoxParams{
-		UserID: int64(userID),
-		BoxName: name,
+		UserID:   int64(userID),
+		BoxName:  name,
 		ImageUrl: "",
 	})
 }

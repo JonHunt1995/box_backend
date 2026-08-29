@@ -15,13 +15,27 @@ type BoxItem struct {
 }
 
 type Box struct {
-	ID string `json:"id"`
+	ID   string `json:"id"`
+	Name string `json:"name"`
 }
 
 type User struct {
 	Boxes []Box `json:"boxes"`
 }
 
+// getUserBoxes godoc
+//
+//	@Summary	Get all boxes from a user based off of the user id
+//	@Tags		Boxes
+//	@Accept		json
+//	@Produce	json
+//	@Param		user_id	path		int	true	"Unique user id"
+//	@Success	200		{object}	User
+//	@Failure	400		{string}	string	"Bad Request: (error description)"
+//
+//	@Failure	404		{string}	string	"User Not Found"
+//
+//	@Router		/{user_id}/boxes [get]
 func (a *app) getUserBoxes(c *echo.Context) error {
 	userID, err := echo.PathParam[int](c, "user_id")
 	if err != nil {
@@ -36,7 +50,7 @@ func (a *app) getUserBoxes(c *echo.Context) error {
 
 	boxes := make([]Box, len(dbBoxes))
 	for i, dbBox := range dbBoxes {
-		boxes[i] = Box{ID: strconv.Itoa(int(dbBox.BoxID))}
+		boxes[i] = Box{ID: strconv.Itoa(int(dbBox.BoxID)), Name: dbBox.BoxName}
 	}
 	user := User{
 		Boxes: boxes,
