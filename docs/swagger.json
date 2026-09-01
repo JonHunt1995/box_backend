@@ -9,6 +9,49 @@
     "host": "localhost:1323",
     "basePath": "/api/v1",
     "paths": {
+        "/items/{box_id}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Boxes"
+                ],
+                "summary": "Get items from a box id",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Unique box id",
+                        "name": "box_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/main.BoxItem"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request: (error description)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "box Not Found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/{user_id}/add-box": {
             "post": {
                 "tags": [
@@ -95,6 +138,23 @@
                     "type": "string"
                 },
                 "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "main.BoxItem": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "quantity": {
+                    "type": "integer"
+                },
+                "updatedAt": {
                     "type": "string"
                 }
             }

@@ -45,3 +45,7 @@ func (s *Service) Create(ctx context.Context, userID int, name string) (db.Boomb
 		ImageUrl: "test_url",
 	})
 }
+
+func (s *Service) Read(ctx context.Context, boxID int) ([]db.GetBoxContentsByBoxIDRow, error) {
+	return s.repo.GetBoxContentsByBoxID(ctx, int64(boxID))
+}

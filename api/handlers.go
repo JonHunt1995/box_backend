@@ -10,7 +10,8 @@ import (
 )
 
 type BoxItem struct {
-	ID        string    `json:"id"`
+	ID        int       `json:"id"`
+	Name      string    `json:"name"`
 	UpdatedAt time.Time `json:"updatedAt"`
 	Quantity  int       `json:"quantity"`
 }
@@ -81,4 +82,40 @@ func (a *app) registerNewBoxes(c *echo.Context) error {
 	}
 	log.Println(result)
 	return c.NoContent(http.StatusCreated)
+}
+
+// getItemsFromBox godoc
+//
+//	@Summary	Get items from a box id
+//	@Tags		Boxes
+//	@Produce	json
+//	@Param		box_id	path		int	true	"Unique box id"
+//	@Success	200		{array}		BoxItem
+//	@Failure	400		{string}	string	"Bad Request: (error description)"
+//	@Failure	404		{string}	string	"box Not Found"
+//
+//	@Router		/items/{box_id} [get]
+func (a *app) getItemsFromBox(c *echo.Context) error {
+	boxID, err := echo.PathParam[int](c, "box_id")
+	if err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+
+	ctx := c.Request().Context()
+	contents, err := a.Boxes.Read(ctx, boxID)
+	if err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+
+	items := make([]BoxItem, len(contents))
+	for i, content := range contents {
+		items[i] = BoxItem{
+			ID:        int(content.ItemID),
+			Name:      content.ItemName,
+			UpdatedAt: content.UpdatedAt,
+			Quantity:  int(content.Quantity),
+		}
+	}
+
+	return c.JSON(http.StatusOK, items)
 }
