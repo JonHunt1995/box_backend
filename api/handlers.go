@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"net/http"
 	"strconv"
 	"time"
@@ -58,13 +59,26 @@ func (a *app) getUserBoxes(c *echo.Context) error {
 	return c.JSON(http.StatusOK, user)
 }
 
+// registerNewBoxes godoc
+//
+//	@Summary	Add a box to a user's collection
+//	@Tags		Boxes
+//	@Param		user_id	path	int	true	"Unique user id"
+//	@Success	201
+//	@Failure	400	{string}	string	"Bad Request: (error description)"
+//	@Failure	404	{string}	string	"User Not Found"
+//	@Router		/{user_id}/add-box [post]
 func (a *app) registerNewBoxes(c *echo.Context) error {
 	userID, err := echo.PathParam[int](c, "user_id")
 	if err != nil {
-		return err
+		return c.String(http.StatusBadRequest, err.Error())
 	}
 
 	ctx := c.Request().Context()
-	a.Boxes.Create(ctx, userID, "")
+	result, err := a.Boxes.Create(ctx, userID, "test")
+	if err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+	log.Println(result)
 	return c.NoContent(http.StatusCreated)
 }

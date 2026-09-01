@@ -42,6 +42,6 @@ func (s *Service) Create(ctx context.Context, userID int, name string) (db.Boomb
 	return s.repo.CreateBox(ctx, db.CreateBoxParams{
 		UserID:   int64(userID),
 		BoxName:  name,
-		ImageUrl: "",
+		ImageUrl: "test_url",
 	})
 }

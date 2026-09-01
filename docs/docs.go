@@ -15,6 +15,40 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/{user_id}/add-box": {
+            "post": {
+                "tags": [
+                    "Boxes"
+                ],
+                "summary": "Add a box to a user's collection",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Unique user id",
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    },
+                    "400": {
+                        "description": "Bad Request: (error description)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "User Not Found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/{user_id}/boxes": {
             "get": {
                 "consumes": [

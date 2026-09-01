@@ -23,6 +23,28 @@ info:
   title: Boom Box API
   version: "1.0"
 paths:
+  /{user_id}/add-box:
+    post:
+      parameters:
+      - description: Unique user id
+        in: path
+        name: user_id
+        required: true
+        type: integer
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: 'Bad Request: (error description)'
+          schema:
+            type: string
+        "404":
+          description: User Not Found
+          schema:
+            type: string
+      summary: Add a box to a user's collection
+      tags:
+      - Boxes
   /{user_id}/boxes:
     get:
       consumes:
