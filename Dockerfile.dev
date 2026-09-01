@@ -1,0 +1,12 @@
+FROM golang:1.26-alpine
+
+WORKDIR /app
+
+RUN go install github.com/githubnemo/CompileDaemon@latest
+
+COPY go.mod go.sum ./
+RUN go mod download
+
+EXPOSE 1323
+
+ENTRYPOINT CompileDaemon -build="go build -o tmp-api ./api" -command="./tmp-api"

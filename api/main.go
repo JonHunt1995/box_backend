@@ -1,78 +1,57 @@
 package main
 
 import (
-	"net/http"
-	"sync"
+	"context"
+	"database/sql"
+	"log"
+	"os"
+	"time"
+
+	_ "github.com/jackc/pgx/v5/stdlib"
 
 	"github.com/labstack/echo/v5"
 	"github.com/labstack/echo/v5/middleware"
+	"inventorybox.com/api/box"
+	"inventorybox.com/api/boxItem"
+	"inventorybox.com/api/user"
+	"inventorybox.com/db"
 )
 
-type Box struct {
-	Name     string   `json:"name"`
-	Contents []string `json:"contents"`
-}
-
-type Cache struct {
-	mu   sync.RWMutex
-	data map[string][]Box
-}
-
-type app struct {
-	DB *Cache
-}
-
-type User struct {
-	Name  string `json:"name"`
-	Rooms []Box  `json:"boxes"`
-}
-
-func (a *app) getUserBoxes(c *echo.Context) error {
-	userID := c.Param("user_id")
-	a.DB.mu.Lock()
-	defer a.DB.mu.Unlock()
-
-	boxes, found := a.DB.data[userID]
-
-	if !found {
-		return c.String(http.StatusBadRequest, "bad request")
-	}
-
-	user := User{Name: userID, Rooms: boxes}
-	return c.JSON(http.StatusOK, user)
-}
-
-func (a *app) registerNewBoxes(c *echo.Context) error {
-	userID := c.Param("user_id")
-	var box Box
-	if err := c.Bind(&box); err != nil {
-		return c.String(http.StatusBadRequest, err.Error())
-	}
-
-	a.DB.mu.Lock()
-	defer a.DB.mu.Unlock()
-	boxes, ok := a.DB.data[userID]
-	c.Logger().Debug("did it make it here? kinda doubtful")
-	if !ok {
-		a.DB.data[userID] = []Box{box}
-		return c.NoContent(http.StatusCreated)
-	}
-
-	a.DB.data[userID] = append(boxes, box)
-	return c.NoContent(http.StatusCreated)
-}
-
+// @title			Boom Box API
+// @version		1.0
+// @description	API for a web app that allows people to manage and easily find/search
+// @description	contents for their boxes without having to manually open boxes.
+// @host			localhost:1323
+// @BasePath		/api/v1
 func main() {
 	e := echo.New()
 
 	e.Use(middleware.RequestLogger())
 	e.Use(middleware.Recover())
+	e.Use(middleware.ContextTimeout(5 * time.Second))
 
-	app := app{
-		DB: &Cache{
-			mu:   sync.RWMutex{},
-			data: make(map[string][]Box),
-		},
+	conn, err := sql.Open("pgx", os.Getenv("GOOSE_DBSTRING"))
+	if err != nil {
+		log.Fatal("cannot connect to db:", err)
+	}
+	defer conn.Close()
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	if err := conn.PingContext(ctx); err != nil {
+		log.Fatal("cannot connect to db:", err)
+	}
+
+	conn.SetMaxIdleConns(10)
+	conn.SetMaxOpenConns(10)
+	conn.SetConnMaxLifetime(5 * time.Minute)
+
+	repo := db.NewRepo(conn)
+
+	app := &app{
+		Users:    user.New(repo),
+		Boxes:    box.New(repo),
+		BoxItems: boxItem.New(repo),
 	}
 
 	app.RegisterRoutes(e)
